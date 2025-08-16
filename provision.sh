@@ -1,5 +1,5 @@
 #!/bin/bash
-set -euo pipefail
+set -uo pipefail
 
 set -a
 set +a
@@ -12,20 +12,20 @@ main() {
 
 # Instalação do Jenkins
 sudo apt update
-sudo apt install wget unzip openjdk-17-jre -y
+sudo apt install wget unzip fontconfig openjdk-17-jre -y
 
-curl -fsSL https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key | sudo tee \
-  /usr/share/keyrings/jenkins-archive-keyring.gpg > /dev/null
-echo "deb [signed-by=/usr/share/keyrings/jenkins-archive-keyring.gpg] \
-  https://pkg.jenkins.io/debian-stable binary/" | sudo tee \
-  /etc/apt/sources.list.d/jenkins.list > /dev/null
+sudo wget -O /etc/apt/keyrings/jenkins-keyring.asc \
+https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key
+
+echo "deb [signed-by=/etc/apt/keyrings/jenkins-keyring.asc]" \
+https://pkg.jenkins.io/debian-stable binary/ | sudo tee \
+/etc/apt/sources.list.d/jenkins.list > /dev/null
 sudo apt-get update
 sudo apt-get install jenkins -y
 
 sudo systemctl daemon-reload
 sudo systemctl enable jenkins
 sudo systemctl start jenkins
-
 
 # Instalação do docker e docker compose
 sudo apt-get update
@@ -44,6 +44,8 @@ sudo apt-get update
 sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
 sudo usermod -aG docker "$USER"
+
+echo "Server configurado."
 
 }
 
