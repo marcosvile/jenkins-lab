@@ -2,6 +2,7 @@ Vagrant.configure("2") do |config|
   config.vm.hostname = "server-jenkins"
   config.vm.box = "bento/ubuntu-24.04"
   config.vm.network "forwarded_port", guest: 8080, host: 8080, host_ip: "127.0.0.1"
+  config.vm.disk :disk, size: "10GB", primary: true
 
   config.vm.synced_folder ".", "/vagrant", type: "rsync", rsync__exclude: ".git/"
 
@@ -14,7 +15,6 @@ Vagrant.configure("2") do |config|
 
   config.vm.provider "virtualbox" do |vb|
     vb.memory = "2048"
-    vb.
   end
 
   config.vm.provision "shell", path: "provision.sh"
